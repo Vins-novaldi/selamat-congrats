@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Selamat Sempro Piaa! 🎓</title>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Nunito:wght@400;600;700;800;900&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FFB3C6;
+    --pink-deep: #FF85A1;
+    --lilac: #C9B8E8;
+    --lilac-soft: #E8E0F5;
+    --peach: #FFDAB9;
+    --peach-deep: #FFB347;
+    --cream: #FFF8F0;
+    --mint: #B5EAD7;
+    --yellow: #FFEAA7;
+    --text-dark: #6B4C7A;
+    --text-mid: #9B7BB0;
+    --text-light: #C9A8D4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #FFE4EE 0%, #F0E6FF 35%, #FFE8D6 70%, #FFF0E6 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='24' font-size='24'%3E✨%3C/text%3E%3C/svg%3E"), auto;
+  }
+
+  /* ========== CANVAS CONFETTI ========== */
+  #confetti-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 999;
+    display: none;
+  }
+
+  /* ========== FLOATING SHAPES BG ========== */
+  .bg-shapes {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .shape {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: floatShape 8s ease-in-out infinite;
+  }
+  .shape:nth-child(1) { width:120px;height:120px;background:var(--pink);top:5%;left:5%;animation-delay:0s; }
+  .shape:nth-child(2) { width:80px;height:80px;background:var(--lilac);top:15%;right:8%;animation-delay:1.5s; }
+  .shape:nth-child(3) { width:100px;height:100px;background:var(--peach);bottom:20%;left:10%;animation-delay:3s; }
+  .shape:nth-child(4) { width:60px;height:60px;background:var(--mint);bottom:30%;right:5%;animation-delay:2s; }
+  .shape:nth-child(5) { width:90px;height:90px;background:var(--yellow);top:45%;left:2%;animation-delay:4s; }
+  .shape:nth-child(6) { width:70px;height:70px;background:var(--pink-deep);top:60%;right:3%;animation-delay:1s;opacity:0.2; }
+
+  @keyframes floatShape {
+    0%,100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-30px) rotate(15deg); }
+  }
+
+  /* ========== FLOATING EMOJIS ========== */
+  .float-emoji {
+    position: fixed;
+    font-size: 1.5rem;
+    animation: floatUp 6s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+  }
+  @keyframes floatUp {
+    0%,100% { transform: translateY(0) rotate(-10deg); opacity:0.6; }
+    50% { transform: translateY(-20px) rotate(10deg); opacity:1; }
+  }
+
+  /* ========== SPARKLES ========== */
+  .sparkle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 2;
+    animation: sparkleAnim 2s ease-in-out infinite;
+    font-size: 1rem;
+  }
+  @keyframes sparkleAnim {
+    0%,100% { transform: scale(1) rotate(0deg); opacity:0.7; }
+    50% { transform: scale(1.5) rotate(180deg); opacity:1; }
+  }
+
+  /* ========== PAGES ========== */
+  #opening-page, #main-page {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+  }
+
+  /* ========== OPENING PAGE ========== */
+  #opening-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .opening-deco {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+    animation: bounce 1.5s ease-in-out infinite;
+  }
+  @keyframes bounce {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+  }
+
+  .opening-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.8rem, 6vw, 3rem);
+    color: var(--text-dark);
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 0px rgba(255,179,198,0.5);
+  }
+
+  .opening-sub {
+    font-size: clamp(0.9rem, 3vw, 1.1rem);
+    color: var(--text-mid);
+    margin-bottom: 2.5rem;
+    font-weight: 600;
+  }
+
+  .big-btn {
+    background: linear-gradient(135deg, var(--pink-deep), var(--lilac), var(--peach-deep));
+    background-size: 200% 200%;
+    animation: gradientShift 3s ease infinite;
+    color: white;
+    border: none;
+    padding: 1.2rem 2.5rem;
+    border-radius: 60px;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(1rem, 4vw, 1.3rem);
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 8px 30px rgba(255, 133, 161, 0.5);
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+    max-width: 90vw;
+  }
+  .big-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;left: -50%;
+    width: 200%;height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 60%);
+    transform: scale(0);
+    transition: transform 0.5s ease;
+  }
+  .big-btn:hover::after { transform: scale(1); }
+  .big-btn:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 12px 40px rgba(255,133,161,0.6); }
+  .big-btn:active { transform: scale(0.97); }
+
+  @keyframes gradientShift {
+    0%,100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  .opening-stars {
+    margin-top: 2rem;
+    font-size: 1.5rem;
+    letter-spacing: 0.5rem;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity:1; transform:scale(1); }
+    50% { opacity:0.5; transform:scale(0.9); }
+  }
+
+  /* ========== MAIN PAGE ========== */
+  #main-page {
+    display: none;
+    padding: 1.5rem 1rem 3rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Header Section */
+  .header-section {
+    text-align: center;
+    padding: 2rem 0 1rem;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+  }
+  .header-section.show { opacity:1; transform:translateY(0); }
+
+  .crown-emoji { font-size: 3rem; display:block; animation: bounce 2s ease-in-out infinite; }
+
+  .main-title {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    background: linear-gradient(135deg, var(--pink-deep), var(--text-dark), var(--peach-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin: 0.5rem 0;
+  }
+
+  .sub-header {
+    font-size: clamp(1rem, 3.5vw, 1.2rem);
+    color: var(--text-mid);
+    font-weight: 700;
+    margin-top: 0.5rem;
+  }
+
+  /* ========== PHOTO AREA ========== */
+  .photo-section {
+    margin: 1.5rem auto;
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.8s ease 0.3s;
+  }
+  .photo-section.show { opacity:1; transform:scale(1); }
+
+  .photo-wrapper {
+    display: inline-block;
+    position: relative;
+  }
+  .photo-frame {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--pink), var(--lilac), var(--peach));
+    padding: 5px;
+    box-shadow: 0 8px 30px rgba(201,184,232,0.5);
+    animation: pulseFrame 3s ease-in-out infinite;
+    margin: 0 auto;
+  }
+  @keyframes pulseFrame {
+    0%,100% { box-shadow: 0 8px 30px rgba(201,184,232,0.5); }
+    50% { box-shadow: 0 12px 40px rgba(255,133,161,0.6), 0 0 0 8px rgba(255,179,198,0.2); }
+  }
+  .photo-inner {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFE4EE, #F0E6FF);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    overflow: hidden;
+    border: 3px solid white;
+  }
+  .photo-inner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    display: none;
+  }
+  .photo-placeholder-text {
+    font-size: 0.6rem;
+    color: var(--text-light);
+    margin-top: 0.3rem;
+    font-weight: 700;
+  }
+  .photo-badge {
+    position: absolute;
+    bottom: 5px; right: 5px;
+    background: white;
+    border-radius: 50%;
+    width: 40px; height: 40px;
+    display: flex; align-items:center; justify-content:center;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    animation: spin 4s linear infinite;
+  }
+  @keyframes spin { 0%{transform:rotate(0deg);} 100%{transform:rotate(360deg);} }
+
+  .photo-name {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.4rem;
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-top: 0.8rem;
+  }
+
+  /* ========== FUN MESSAGES ========== */
+  .messages-section {
+    margin: 1.5rem 0;
+  }
+
+  .msg-card {
+    background: white;
+    border-radius: 20px;
+    padding: 1rem 1.2rem;
+    margin: 0.8rem 0;
+    box-shadow: 0 4px 15px rgba(201,184,232,0.25);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s ease;
+    border-left: 4px solid var(--pink);
+  }
+  .msg-card.from-right { transform: translateX(30px); border-left: none; border-right: 4px solid var(--lilac); }
+  .msg-card.show { opacity:1; transform:translateX(0); }
+  .msg-card:nth-child(2) { border-left-color: var(--lilac); }
+  .msg-card:nth-child(3) { border-left-color: var(--peach-deep); }
+
+  .msg-emoji { font-size: 1.8rem; flex-shrink: 0; }
+  .msg-text {
+    font-size: clamp(0.85rem, 3vw, 1rem);
+    color: var(--text-dark);
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  /* ========== MAIN CARD ========== */
+  .main-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(255,240,250,0.95));
+    border-radius: 28px;
+    padding: 1.8rem 1.5rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 10px 40px rgba(201,184,232,0.35);
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+    border: 2px solid rgba(255,179,198,0.4);
+  }
+  .main-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%;height: 200%;
+    background: radial-gradient(ellipse at center, rgba(255,179,198,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .main-card.show { opacity:1; transform:translateY(0); }
+
+  .card-deco { font-size: 2rem; margin-bottom: 0.5rem; }
+  .card-title {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.3rem, 5vw, 1.8rem);
+    color: var(--text-dark);
+    font-weight: 700;
+    margin-bottom: 0.8rem;
+  }
+  .card-message {
+    font-size: clamp(0.9rem, 3vw, 1rem);
+    color: var(--text-mid);
+    line-height: 1.7;
+    font-weight: 600;
+  }
+  .card-border-deco {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    letter-spacing: 0.5rem;
+    color: var(--pink-deep);
+    opacity: 0.6;
+  }
+
+  /* ========== SEMANGAT BUTTON ========== */
+  .semangat-section {
+    text-align: center;
+    margin: 1.5rem 0;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+  .semangat-section.show { opacity:1; }
+
+  .semangat-btn {
+    background: linear-gradient(135deg, var(--lilac), var(--pink));
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(201,184,232,0.5);
+    transition: all 0.3s ease;
+    animation: gentlePulse 2.5s ease-in-out infinite;
+  }
+  .semangat-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 30px rgba(201,184,232,0.6); }
+  @keyframes gentlePulse {
+    0%,100% { box-shadow: 0 6px 20px rgba(201,184,232,0.5); }
+    50% { box-shadow: 0 8px 30px rgba(255,133,161,0.5); }
+  }
+
+  /* ========== POPUP ========== */
+  .popup-overlay {
+    position: fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background: rgba(107,76,122,0.4);
+    backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  .popup-overlay.show { display:flex; }
+
+  .popup-box {
+    background: linear-gradient(135deg, #fff, #FFF0F8);
+    border-radius: 28px;
+    padding: 2rem 1.5rem;
+    max-width: 360px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(107,76,122,0.3);
+    position: relative;
+    border: 2px solid rgba(255,179,198,0.5);
+    animation: popupIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+  @keyframes popupIn {
+    from { transform: scale(0.5) rotate(-5deg); opacity:0; }
+    to { transform: scale(1) rotate(0deg); opacity:1; }
+  }
+
+  .popup-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+  .popup-text {
+    font-family: 'Pacifico', cursive;
+    font-size: clamp(1.2rem, 5vw, 1.6rem);
+    color: var(--text-dark);
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+  }
+  .popup-dots { margin: 1rem 0; font-size: 1.3rem; letter-spacing: 0.3rem; color: var(--text-light); }
+
+  .popup-next-btn {
+    background: linear-gradient(135deg, var(--pink-deep), var(--lilac));
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+    width: 100%;
+  }
+  .popup-next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,133,161,0.4); }
+
+  .popup-close {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    background: var(--lilac-soft);
+    border: none;
+    border-radius: 50%;
+    width: 32px; height: 32px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: var(--text-mid);
+    display: flex; align-items:center; justify-content:center;
+    transition: background 0.2s;
+  }
+  .popup-close:hover { background: var(--pink); color: white; }
+
+  /* ========== FOOTER ========== */
+  .footer {
+    text-align: center;
+    padding: 1.5rem 0 1rem;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  .footer.show { opacity:1; }
+  .footer p {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 700;
+  }
+  .footer .heart { animation: heartBeat 1.5s ease-in-out infinite; display:inline-block; }
+  @keyframes heartBeat {
+    0%,100%{transform:scale(1);}
+    14%{transform:scale(1.3);}
+    28%{transform:scale(1);}
+    42%{transform:scale(1.3);}
+    70%{transform:scale(1);}
+  }
+
+  /* ========== MUSIC BUTTON ========== */
+  .music-btn {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 500;
+    background: white;
+    border: 2px solid var(--pink);
+    border-radius: 50%;
+    width: 50px; height: 50px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(255,133,161,0.3);
+    display: flex; align-items:center; justify-content:center;
+    transition: all 0.3s ease;
+  }
+  .music-btn:hover { transform: scale(1.1); background: var(--pink); }
+  .music-btn.playing { animation: musicPulse 1s ease-in-out infinite; }
+  @keyframes musicPulse {
+    0%,100%{box-shadow:0 4px 15px rgba(255,133,161,0.3);}
+    50%{box-shadow:0 4px 25px rgba(255,133,161,0.7),0 0 0 6px rgba(255,133,161,0.15);}
+  }
+
+  /* ========== DIVIDER ========== */
+  .cute-divider {
+    text-align: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.5rem;
+    color: var(--text-light);
+    margin: 0.5rem 0;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+
+<!-- Background shapes -->
+<div class="bg-shapes">
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+  <div class="shape"></div>
+</div>
+
+<!-- Floating emojis -->
+<span class="float-emoji" style="top:8%;left:5%;animation-delay:0s">🌸</span>
+<span class="float-emoji" style="top:20%;right:6%;animation-delay:1s">✨</span>
+<span class="float-emoji" style="bottom:25%;left:4%;animation-delay:2s">💫</span>
+<span class="float-emoji" style="bottom:15%;right:7%;animation-delay:0.5s">🌷</span>
+<span class="float-emoji" style="top:50%;left:3%;animation-delay:3s">⭐</span>
+<span class="float-emoji" style="top:70%;right:4%;animation-delay:1.5s">🦋</span>
+
+<!-- Sparkles -->
+<span class="sparkle" style="top:12%;left:20%;animation-delay:0.3s">✦</span>
+<span class="sparkle" style="top:30%;right:18%;animation-delay:1.2s;color:var(--lilac)">✦</span>
+<span class="sparkle" style="bottom:35%;left:15%;animation-delay:0.8s;color:var(--peach-deep)">✦</span>
+<span class="sparkle" style="bottom:20%;right:20%;animation-delay:2s;color:var(--pink-deep)">✦</span>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Music Button -->
+<button class="music-btn" id="musicBtn" onclick="toggleMusic()" title="Toggle Music">🎵</button>
+
+<!-- ====== OPENING PAGE ====== -->
+<div id="opening-page">
+  <div class="opening-deco">🎓</div>
+  <h1 class="opening-title">Piaaa <br> ada yang spesial nih!</h1>
+  <p class="opening-sub">Khusus buat anda ✨</p>
+  <button class="big-btn" onclick="openMain()">
+    Klik kalau kamu siap sempro ✨
+  </button>
+  <div class="opening-stars">⭐ 🌸 😁 🌸 ⭐</div>
+</div>
+
+<!-- ====== MAIN PAGE ====== -->
+<div id="main-page">
+
+  <!-- Header -->
+  <div class="header-section" id="headerSection">
+    <span class="crown-emoji">👑</span>
+    <h1 class="main-title">Selamat Sempro!!!</h1>
+    <p style="font-size:2rem;margin:0.3rem 0">🎓</p>
+    <p class="sub-header">Hari yang ditunggu-tunggu akhirnya tiba!</p>
+  </div>
+
+  <!-- Photo -->
+  <div class="photo-section" id="photoSection">
+    <div class="photo-wrapper">
+      <div class="photo-frame">
+        <div class="photo-inner">
+          <!-- Ganti src="URL_FOTO_KAMU" dengan link foto asli -->
+          <img src="URL" alt="Foto" id="photoImg" />
+          <span id="photoIcon">🌸</span>
+          <span class="photo-placeholder-text" id="photoPlaceholder">Foto kamu di sini!</span>
+        </div>
+      </div>
+      <div class="photo-badge">🌟</div>
+    </div>
+    <!-- Ganti nama di sini -->
+    <p class="photo-name">~ Nama  ~</p>
+  </div>
+
+  <div class="cute-divider">· · · ✿ · · ·</div>
+
+  <!-- Fun Messages -->
+  <div class="messages-section">
+    <div class="msg-card" id="msg1">
+      <span class="msg-emoji">🎉</span>
+      <p class="msg-text">Akhirnya Selamat!</p>
+    </div>
+    <div class="msg-card from-right" id="msg2">
+      <p class="msg-text">Semoga Selamat~</p>
+      <span class="msg-emoji">🙏</span>
+    </div>
+    <div class="msg-card" id="msg3">
+      <span class="msg-emoji">😆</span>
+      <p class="msg-text">Ya Selamat congrats</p>
+    </div>
+  </div>
+
+  <div class="cute-divider">· · · 🌸 · · ·</div>
+
+  <!-- Main Card -->
+  <div class="main-card" id="mainCard">
+    <div class="card-deco">💌 ✨ 💌</div>
+    <h2 class="card-title">Kartu Ucapan Spesial</h2>
+        <p class="card-message"> harusnya disini ucapan spesial <br><br>
+      "Selamat congrats Selamat congrats Selamat congrats Selamat congrats Selamat congrats Selamat congrats! 
+      🌸"
+    </p>
+    <div class="card-border-deco">✦ ✦ ✦ ✦ ✦</div>
+  </div>
+
+  <!-- Semangat Button -->
+  <div class="semangat-section" id="semangatSection">
+    <button class="semangat-btn" onclick="openPopup()">
+      💪 Butuh semangat?
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <div class="footer" id="footer">
+    <div class="cute-divider">· · ·  · · ·</div>
+    <p>Dibuat dengan bangga oleh pijay <span class="heart">😎</span></p>
+  </div>
+
+</div><!-- /main-page -->
+
+<!-- ====== POPUP ====== -->
+<div class="popup-overlay" id="popupOverlay" onclick="checkOverlayClose(event)">
+  <div class="popup-box" id="popupBox">
+    <button class="popup-close" onclick="closePopup()">×</button>
+    <div class="popup-emoji" id="popupEmoji">🌸</div>
+    <div class="popup-text" id="popupText">Tenang...</div>
+    <div class="popup-dots">· · ·</div>
+    <button class="popup-next-btn" id="popupBtn" onclick="nextPopupMessage()">Lanjut ➤</button>
+  </div>
+</div>
+
+<script>
+// ====== CONFIG - Ubah di sini ======
+const CONFIG = {
+  name: "Shofiyah Ruhamah",     // Ganti nama
+  photoUrl: "/image.jpg",               // Ganti dengan URL foto (opsional)
+};
+
+// ====== POPUP MESSAGES ======
+const popupMessages = [
+  { emoji: "🌸", text: "Tenang..." },
+  { emoji: "💪", text: "Semangat!" },
+  { emoji: "😂", text: "dah itu aja!" },
+  { emoji: "😅", text: "yaa itu aja!" },
+  { emoji: "😄", text: "close aj, jangan di lanjut" },
+  { emoji: "😎", text: "selamat congrats (habis kata-kata)" },
+  { emoji: "🙂", text: "serius, close aj!" },
+  { emoji: "😑", text: "ini harus tutup" },
+];
+let popupIndex = 0;
+
+// ====== MUSIC (Web Audio API - Tone Generator) ======
+let audioCtx = null;
+let musicInterval = null;
+let isPlaying = false;
+
+// Cute melody notes (frequencies in Hz)
+const melody = [523, 659, 784, 1047, 784, 659, 523, 587, 698, 880, 698, 587, 523, 659, 523];
+const durations = [0.3,0.3,0.3,0.3,0.3,0.3,0.6,0.3,0.3,0.3,0.3,0.3,0.3,0.3,0.6];
+
+function createAudioContext() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  return audioCtx;
+}
+
+function playNote(freq, startTime, duration) {
+  const ctx = createAudioContext();
+  const osc = ctx.createOscillator();
+  const gainNode = ctx.createGain();
+  osc.connect(gainNode);
+  gainNode.connect(ctx.destination);
+  osc.type = 'sine';
+  osc.frequency.setValueAtTime(freq, startTime);
+  gainNode.gain.setValueAtTime(0, startTime);
+  gainNode.gain.linearRampToValueAtTime(0.1, startTime + 0.02);
+  gainNode.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+  osc.start(startTime);
+  osc.stop(startTime + duration);
+}
+
+function playMelody() {
+  const ctx = createAudioContext();
+  let time = ctx.currentTime;
+  melody.forEach((freq, i) => {
+    playNote(freq, time, durations[i] * 0.9);
+    time += durations[i];
+  });
+  return time - ctx.currentTime;
+}
+
+function startMusic() {
+  createAudioContext();
+  const duration = playMelody() * 1000;
+  musicInterval = setInterval(playMelody, duration + 500);
+  isPlaying = true;
+  document.getElementById('musicBtn').classList.add('playing');
+  document.getElementById('musicBtn').textContent = '🎶';
+}
+
+function stopMusic() {
+  clearInterval(musicInterval);
+  musicInterval = null;
+  isPlaying = false;
+  document.getElementById('musicBtn').classList.remove('playing');
+  document.getElementById('musicBtn').textContent = '🎵';
+}
+
+function toggleMusic() {
+  if (isPlaying) { stopMusic(); }
+  else { startMusic(); }
+}
+
+// ====== CONFETTI ======
+const canvas = document.getElementById('confetti-canvas');
+const ctx2 = canvas.getContext('2d');
+let confettiPieces = [];
+let confettiActive = false;
+let confettiTimer;
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const confettiColors = ['#FFB3C6','#C9B8E8','#FFDAB9','#B5EAD7','#FFEAA7','#FF85A1','#A8D8EA','#FFC8DD'];
+const confettiShapes = ['circle', 'square', 'star'];
+
+function createConfettiPiece() {
+  return {
+    x: Math.random() * canvas.width,
+    y: -10,
+    size: Math.random() * 10 + 6,
+    color: confettiColors[Math.floor(Math.random() * confettiColors.length)],
+    shape: confettiShapes[Math.floor(Math.random() * confettiShapes.length)],
+    speedY: Math.random() * 3 + 2,
+    speedX: (Math.random() - 0.5) * 2,
+    rotation: Math.random() * 360,
+    rotSpeed: (Math.random() - 0.5) * 5,
+    opacity: 1,
+  };
+}
+
+function drawStar(cx, cy, size, color) {
+  ctx2.beginPath();
+  for (let i = 0; i < 5; i++) {
+    const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+    const x = cx + size * Math.cos(angle);
+    const y = cy + size * Math.sin(angle);
+    i === 0 ? ctx2.moveTo(x, y) : ctx2.lineTo(x, y);
+  }
+  ctx2.closePath();
+  ctx2.fillStyle = color;
+  ctx2.fill();
+}
+
+function animateConfetti() {
+  if (!confettiActive) return;
+  ctx2.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Spawn new pieces
+  if (confettiPieces.length < 120) {
+    for (let i = 0; i < 3; i++) {
+      confettiPieces.push(createConfettiPiece());
+    }
+  }
+
+  confettiPieces = confettiPieces.filter(p => p.y < canvas.height + 20);
+
+  confettiPieces.forEach(p => {
+    p.y += p.speedY;
+    p.x += p.speedX;
+    p.rotation += p.rotSpeed;
+
+    ctx2.save();
+    ctx2.globalAlpha = p.opacity;
+    ctx2.translate(p.x, p.y);
+    ctx2.rotate((p.rotation * Math.PI) / 180);
+
+    if (p.shape === 'circle') {
+      ctx2.beginPath();
+      ctx2.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+      ctx2.fillStyle = p.color;
+      ctx2.fill();
+    } else if (p.shape === 'square') {
+      ctx2.fillStyle = p.color;
+      ctx2.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+    } else {
+      drawStar(0, 0, p.size / 2, p.color);
+    }
+    ctx2.restore();
+  });
+
+  requestAnimationFrame(animateConfetti);
+}
+
+function startConfetti() {
+  canvas.style.display = 'block';
+  confettiActive = true;
+  confettiPieces = [];
+  animateConfetti();
+
+  // Stop spawning after 5s, let existing fall
+  clearTimeout(confettiTimer);
+  confettiTimer = setTimeout(() => {
+    confettiActive = false;
+    setTimeout(() => {
+      canvas.style.display = 'none';
+      ctx2.clearRect(0, 0, canvas.width, canvas.height);
+    }, 4000);
+  }, 5000);
+}
+
+// ====== OPEN MAIN PAGE ======
+function openMain() {
+  // Start music
+  startMusic();
+
+  // Transition
+  const openingPage = document.getElementById('opening-page');
+  openingPage.style.transition = 'all 0.6s ease';
+  openingPage.style.opacity = '0';
+  openingPage.style.transform = 'scale(0.9)';
+
+  setTimeout(() => {
+    openingPage.style.display = 'none';
+    const mainPage = document.getElementById('main-page');
+    mainPage.style.display = 'block';
+
+    // Start confetti
+    startConfetti();
+
+    // Staggered reveal
+    setTimeout(() => document.getElementById('headerSection').classList.add('show'), 100);
+    setTimeout(() => document.getElementById('photoSection').classList.add('show'), 400);
+    setTimeout(() => document.getElementById('msg1').classList.add('show'), 700);
+    setTimeout(() => document.getElementById('msg2').classList.add('show'), 1000);
+    setTimeout(() => document.getElementById('msg3').classList.add('show'), 1300);
+    setTimeout(() => document.getElementById('mainCard').classList.add('show'), 1600);
+    setTimeout(() => document.getElementById('semangatSection').classList.add('show'), 1900);
+    setTimeout(() => document.getElementById('footer').classList.add('show'), 2200);
+
+  }, 600);
+}
+
+// ====== POPUP ======
+function openPopup() {
+  popupIndex = 0;
+  updatePopup();
+  document.getElementById('popupOverlay').classList.add('show');
+}
+
+function closePopup() {
+  document.getElementById('popupOverlay').classList.remove('show');
+  popupIndex = 0;
+}
+
+function checkOverlayClose(e) {
+  if (e.target === document.getElementById('popupOverlay')) {
+    closePopup();
+  }
+}
+
+function updatePopup() {
+  const msg = popupMessages[popupIndex];
+  const emojiEl = document.getElementById('popupEmoji');
+  const textEl = document.getElementById('popupText');
+  const btnEl = document.getElementById('popupBtn');
+
+  emojiEl.style.transform = 'scale(0)';
+  textEl.style.opacity = '0';
+
+  setTimeout(() => {
+    emojiEl.textContent = msg.emoji;
+    textEl.textContent = msg.text;
+    emojiEl.style.transition = 'transform 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+    emojiEl.style.transform = 'scale(1)';
+    textEl.style.transition = 'opacity 0.4s ease';
+    textEl.style.opacity = '1';
+  }, 200);
+
+  if (popupIndex >= popupMessages.length - 1) {
+    btnEl.textContent = 'Tutup';
+  } else {
+    btnEl.textContent = 'Lanjut ➤';
+  }
+}
+
+function nextPopupMessage() {
+  if (popupIndex >= popupMessages.length - 1) {
+    closePopup();
+  } else {
+    popupIndex++;
+    updatePopup();
+  }
+}
+
+// ====== PHOTO HANDLING ======
+window.addEventListener('load', () => {
+  if (CONFIG.photoUrl && CONFIG.photoUrl.length > 0) {
+    const img = document.getElementById('photoImg');
+    const icon = document.getElementById('photoIcon');
+    const placeholder = document.getElementById('photoPlaceholder');
+    img.src = CONFIG.photoUrl;
+    img.style.display = 'block';
+    if (icon) icon.style.display = 'none';
+    if (placeholder) placeholder.style.display = 'none';
+  }
+  document.querySelector('.photo-name').textContent = `~ ${CONFIG.name} ~`;
+});
+
+// ====== KEYBOARD ======
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closePopup();
+});
+</script>
+</body>
+</html>
